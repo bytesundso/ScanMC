@@ -53,7 +53,7 @@ func Scan(filename string, port int, threads int, timeout time.Duration) (*ScanR
 	var collection *mongo.Collection
 	var ctx = context.TODO()
 
-	clientOptions := options.Client().ApplyURI("mongodb+srv://doadmin:gZD6274zY18Kxf05@db-mongodb-fra1-10276-75144107.mongo.ondigitalocean.com/admin?authSource=admin&replicaSet=db-mongodb-fra1-10276&tls=true")
+	clientOptions := options.Client().ApplyURI("...")
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		fmt.Println("Cannot connect to Database")
