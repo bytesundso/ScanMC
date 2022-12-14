@@ -62,11 +62,16 @@ func Scan(filename string, port int, threads int, timeout time.Duration) (*ScanR
 		return nil, err
 	}
 
-	collection = client.Database("MinecraftServer").Collection("Scan")
-	fmt.Println("asdasd")
-	// for i := 0; i < threads; i++ {
-	// 	go scan(hosts, ch, port, timeout)
- 	// }
+	collection = client.Database("MinecraftServer").Collection("Scan-" + time.Now().Format("01-02-2006 15:04:05"))
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, nil
+	}
+
+	for i := 0; i < threads; i++ {
+		go scan(hosts, ch, port, timeout)
+	}
 	_ = hosts
 
 	for true {
