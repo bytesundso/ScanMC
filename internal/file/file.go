@@ -47,7 +47,7 @@ func ReadNextLine(file *File) (*string, error) {
 	percent := float64(file.pos) / float64(file.len)
 
 	fmt.Printf("\033[0;0H")
-	fmt.Printf("%f\n", percent)
+	fmt.Printf("Progress: %f\n", percent)
 
 	return line, nil
 }

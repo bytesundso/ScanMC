@@ -33,8 +33,12 @@ type ServerEntry struct {
 	Time time.Time `bson:"date"`
 	Host string `bson:"host"`
 	Port int `bson:"port"`
-	Modt string `bson:"modt"`
 	Ping int `bson:"ping"`
+	CurrentPlayers int `bson:"current_players"`
+	MaxPlayers int `bson:"max_players"`
+	VersionName string `bson:"version_name"`
+	VersionProtocol int `bson:"version_protocol"`
+	Modt string `bson:"modt"`
 }
 
 func Scan(filename string, port int, threads int, timeout time.Duration) (*ScanResults, error) {
@@ -78,7 +82,8 @@ func Scan(filename string, port int, threads int, timeout time.Duration) (*ScanR
 		server := <- ch
 
 		if server != nil {
-			_, err = collection.InsertOne(ctx, ServerEntry { primitive.NewObjectID(), time.Now(), server.host, server.port, mc.Motd(*server.slp), server.ping })
+			info := server.slp.Infos()
+			_, err = collection.InsertOne(ctx, ServerEntry { primitive.NewObjectID(), time.Now(), server.host, server.port, server.ping, info.Players.Online, info.Players.Max, info.Version.Name, info.Version.Protocol, mc.Motd(*server.slp) })
 			if err != nil {
 				fmt.Println(err)
 			}
