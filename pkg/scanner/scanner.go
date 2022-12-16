@@ -1,7 +1,7 @@
 package scanner
 
 import(
-	"github.com/bytesundso/ScanMC/internal/file"
+	"github.com/bytesundso/ScanMC/pkg/file"
 	"github.com/alteamc/minequery/ping"
 	//"github.com/xrjr/mcutils/pkg/ping"
 	"sync"

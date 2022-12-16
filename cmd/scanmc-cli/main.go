@@ -2,8 +2,8 @@ package main
 
 import(
 	"github.com/bytesundso/ScanMC/pkg/scanner"
+	"github.com/bytesundso/ScanMC/pkg/file"
 	"github.com/bytesundso/ScanMC/internal/db"
-	"github.com/bytesundso/ScanMC/internal/file"
 	"log"
 )
 
