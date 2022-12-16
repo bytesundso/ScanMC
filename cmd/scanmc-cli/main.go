@@ -2,14 +2,28 @@ package main
 
 import(
 	"github.com/bytesundso/ScanMC/pkg/scanner"
-	"fmt"
+	"github.com/bytesundso/ScanMC/internal/db"
+	"github.com/bytesundso/ScanMC/internal/file"
+	"log"
 )
 
 func main() {
-	results, err := scanner.Scan("hosts.txt", 25565, 10000, 1000000000)
+	dbcon, err := db.Connect("")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
-	fmt.Println(results.Scanned)
+	file, err := file.LoadFile("hosts.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	results := make(chan *scanner.ServerInfo)
+	go scanner.Scan(file, 25565, results, 10000, 1000000000)
+	for true {
+		r := <- results
+		db.Add[scanner.ServerInfo](dbcon, r)
+	}
+
+	db.Close(dbcon)
 }
