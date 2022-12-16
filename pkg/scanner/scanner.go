@@ -2,7 +2,8 @@ package scanner
 
 import(
 	"github.com/bytesundso/ScanMC/internal/file"
-	"github.com/xrjr/mcutils/pkg/ping"
+	"github.com/alteamc/minequery/ping"
+	//"github.com/xrjr/mcutils/pkg/ping"
 	"sync"
 	"time"
 	"io"
@@ -11,7 +12,7 @@ import(
 type ServerInfo struct {
 	Host *string 
 	Port int
-	SLP *ping.JSON
+	Resp *ping.Response
 }
 
 func Scan(hosts *file.File, port int, results chan<- *ServerInfo, threads int, timeout time.Duration) {
@@ -34,21 +35,10 @@ func Scan(hosts *file.File, port int, results chan<- *ServerInfo, threads int, t
 }
 
 func pingAddress(hostname *string, port int, timeout time.Duration) (*ServerInfo, error) {
-	client := ping.NewClient(*hostname, port)
-	client.DialTimeout = timeout
-	client.ReadTimeout = timeout
-	client.SkipSRVLookup = true
-
-	err := client.Connect()
-	if err != nil {
-		return nil, err
-	}
-	defer client.Disconnect()
-
-	hsk, err := client.Handshake()
+	res, err := ping.PingWithTimeout(*hostname, uint16(port), timeout)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ServerInfo { hostname, port, &hsk.Properties }, nil
+	return &ServerInfo { hostname, port, res }, nil
 }
